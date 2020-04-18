@@ -10,7 +10,7 @@ console.clear();
 
 const API = process.env.REACT_APP_API_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const DEFAULT_IMAGE_COUNT = 5;
+const DEFAULT_IMAGE_COUNT = 25;
 const IMAGE_INCREMENT_COUNT = 10;
 
 function App() {
