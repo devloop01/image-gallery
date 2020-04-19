@@ -111,7 +111,10 @@ const Modal = ({ imageData, onModalActive }) => {
 									</svg>
 								</div>
 							</button>
-							<div className={`dropdown-menu ${dropdownActive ? "" : "hide"}`}>
+							<div
+								className={`dropdown-menu ${dropdownActive ? "" : "hide"}`}
+								tabIndex="-1"
+							>
 								<ul>
 									<li>
 										<a href={`${links.download}?force=true&w=640`}>

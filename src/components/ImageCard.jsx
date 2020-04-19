@@ -22,7 +22,7 @@ const ImageCard = ({ imageData, imageIndex, onImageClicked }) => {
 				/>
 				<div className="image-card--options">
 					<div className="user-info">
-						<a href={user.links.html} target="_blank_" tabIndex="1000">
+						<a href={user.links.html} target="_blank_" tabIndex="-1">
 							<img src={user.profile_image.medium} alt={user.name} />
 						</a>
 						<h3>{user.name}</h3>
@@ -35,7 +35,7 @@ const ImageCard = ({ imageData, imageIndex, onImageClicked }) => {
 								display: user.instagram_username ? "block" : "none",
 							}}
 							target="_blank_"
-							tabIndex="1000"
+							tabIndex="-1"
 						>
 							<div className="icon instagram">
 								<svg
@@ -55,7 +55,7 @@ const ImageCard = ({ imageData, imageIndex, onImageClicked }) => {
 								display: user.twitter_username ? "block" : "none",
 							}}
 							target="_blank_"
-							tabIndex="1000"
+							tabIndex="-1"
 						>
 							<div className="icon twitter">
 								<svg
@@ -68,7 +68,7 @@ const ImageCard = ({ imageData, imageIndex, onImageClicked }) => {
 							</div>
 						</a>
 
-						<a className="link" href={`${links.download}?force=true`} tabIndex="1000">
+						<a className="link" href={`${links.download}?force=true`} tabIndex="-1">
 							<div className="icon download">
 								<svg
 									viewBox="0 0 32 32"
