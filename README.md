@@ -1,7 +1,8 @@
 # Image Gallery
 
 A simple Image Gallery using the **Unsplash API** .
-It uses css **grid** to create a masonry layout.
+It uses css **grid** to create a modern looking masonry layout.
+
 
 ## features
   - Search images across unsplash database
