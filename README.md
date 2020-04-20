@@ -3,6 +3,8 @@
 A simple Image Gallery using the **Unsplash API** .
 It uses css **grid** to create a modern looking masonry layout.
 
+**Live:** https://devloop01.github.io/image-gallery/
+
 
 ## features
   - Search images across unsplash database
