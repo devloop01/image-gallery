@@ -11,9 +11,9 @@ console.clear();
 const API = process.env.REACT_APP_API_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 
-const DEFAULT_IMAGE_COUNT = 10; // image amount displayed in HOME
+const DEFAULT_IMAGE_COUNT = 25; // image amount displayed in HOME
 
-const PER_PAGE_IMAGE_COUNT = 10; // image amount displayed in SEARCH
+const PER_PAGE_IMAGE_COUNT = 20; // image amount displayed in SEARCH
 const DEFAULT_PAGE = 1; // page number
 const PAGE_INCREMENT = 1; // page increment
 
