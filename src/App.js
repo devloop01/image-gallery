@@ -10,8 +10,12 @@ console.clear();
 
 const API = process.env.REACT_APP_API_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const DEFAULT_IMAGE_COUNT = 25;
-const IMAGE_INCREMENT_COUNT = 10;
+
+const DEFAULT_IMAGE_COUNT = 10; // image amount displayed in HOME
+
+const PER_PAGE_IMAGE_COUNT = 10; // image amount displayed in SEARCH
+const DEFAULT_PAGE = 1; // page number
+const PAGE_INCREMENT = 1; // page increment
 
 function App() {
 	const [images, setImages] = useState([]);
@@ -20,11 +24,12 @@ function App() {
 	const [clickedImage, setClickedImage] = useState({});
 	const [isModalActive, setModalActive] = useState(false);
 	const [failedToLoad, setFailedToLoad] = useState(false);
-	const [perPageCount, setPerPageCount] = useState(DEFAULT_IMAGE_COUNT);
+	const [perPageCount, setPerPageCount] = useState(PER_PAGE_IMAGE_COUNT);
 	const [totalResults, setTotalResults] = useState(0);
 	const [state, setState] = useState("loading");
 	const [queryChanged, setqueryChanged] = useState(false);
 	const [page, setPage] = useState("home");
+	const [pageCount, setPageCount] = useState(DEFAULT_PAGE);
 
 	const loadButtonEl = useRef();
 
@@ -40,7 +45,10 @@ function App() {
 				setImages(res.data);
 				if (failedToLoad) setFailedToLoad(false);
 			})
-			.catch(() => setFailedToLoad(true));
+			.catch((err) => {
+				setFailedToLoad(true);
+				console.error(err);
+			});
 	};
 
 	useEffect(getRandomPhotos, [failedToLoad]);
@@ -55,11 +63,14 @@ function App() {
 				params: {
 					query: query,
 					per_page: perPageCount,
+					page: pageCount,
 					client_id: CLIENT_ID,
 				},
 			})
 				.then((res) => {
-					setImages(res.data.results);
+					let imgs = query !== prevQuery ? [] : images;
+					imgs = [...imgs, ...res.data.results];
+					setImages(imgs);
 					setTotalResults(res.data.total);
 					if (failedToLoad) setFailedToLoad(false);
 				})
@@ -67,7 +78,7 @@ function App() {
 		}
 	};
 
-	useEffect(searchQuery, [perPageCount]);
+	useEffect(searchQuery, [pageCount]);
 
 	useEffect(() => {
 		if (page === "home") {
@@ -90,7 +101,7 @@ function App() {
 
 	const handleSearch = () => {
 		if (query !== prevQuery && query !== "") {
-			setPerPageCount(DEFAULT_IMAGE_COUNT);
+			setPerPageCount(PER_PAGE_IMAGE_COUNT);
 			setPrevQuery(query);
 			searchQuery();
 		}
@@ -139,10 +150,7 @@ function App() {
 
 			{(!failedToLoad && (
 				<main>
-					<ImageCardList
-						images={images}
-						onImageClicked={(img) => handleImageClick(img)}
-					/>
+					<ImageCardList images={images} onImageClicked={(img) => handleImageClick(img)} />
 					<h3
 						className="text-info loading-text"
 						style={{
@@ -155,12 +163,12 @@ function App() {
 						className={`btn load-more ${state === "loading" ? "loading" : ""}`}
 						ref={loadButtonEl}
 						onClick={() => {
-							setPerPageCount(perPageCount + IMAGE_INCREMENT_COUNT);
+							// setPerPageCount(perPageCount + IMAGE_INCREMENT_COUNT);
+							setPageCount(pageCount + PAGE_INCREMENT);
 							setState("loading");
 						}}
 						style={{
-							display:
-								perPageCount >= totalResults || page === "home" ? "none" : "block",
+							display: perPageCount >= totalResults || page === "home" ? "none" : "block",
 							pointerEvents: state === "loading" ? "none" : "all",
 						}}
 					>
@@ -181,12 +189,7 @@ function App() {
 					</div>
 				))}
 
-			{isModalActive && (
-				<Modal
-					imageData={clickedImage}
-					onModalActive={(isActive) => setModalActive(isActive)}
-				/>
-			)}
+			{isModalActive && <Modal imageData={clickedImage} onModalActive={(isActive) => setModalActive(isActive)} />}
 		</Fragment>
 	);
 }
@@ -196,8 +199,7 @@ function resizeMasonryItem(item) {
 		rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue("grid-row-gap")),
 		rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue("grid-auto-rows"));
 	let rowSpan = Math.ceil(
-		(item.querySelector(".masonry-content").getBoundingClientRect().height + rowGap) /
-			(rowHeight + rowGap)
+		(item.querySelector(".masonry-content").getBoundingClientRect().height + rowGap) / (rowHeight + rowGap)
 	);
 	item.style.gridRowEnd = "span " + rowSpan;
 }
@@ -214,9 +216,7 @@ function waitForImages() {
 	for (let i = 0; i < allItems.length; i++) {
 		imagesLoaded(allItems[i], (instance) => {
 			const item = instance.elements[0];
-			const cardForegroundEl = instance.images[0].img.parentElement.parentElement.querySelector(
-				".image-card-fg"
-			);
+			const cardForegroundEl = instance.images[0].img.parentElement.parentElement.querySelector(".image-card-fg");
 			item.style.display = "block";
 			let t = setTimeout(() => {
 				cardForegroundEl.classList.add("hide");
